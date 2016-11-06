@@ -49,7 +49,7 @@ else
     for c in ${CONFS[@]}
     do
         CONFS_AND_DESCS+=($c)
-        CONFS_AND_DESCS+=($(conf_var CONFIGURATION_NAME $c))
+        CONFS_AND_DESCS+=("$(conf_var CONFIGURATION_NAME $c)")
     done
     CONF_CHOSEN=$(zenity --text="Choose configuration:" --list --column="Configuration" --column="Name" "${CONFS_AND_DESCS[@]}")
 fi
