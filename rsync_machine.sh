@@ -83,21 +83,21 @@ THIS_BACKUP_DATE=$(date "+$DATE_FMT")
 #DRY_RUN=--dry-run
 
 
-if [ ! -f $RSYNC_EXCLUDES_FILE ]; then
+if [ ! -f "$RSYNC_EXCLUDES_FILE" ]; then
     MSG="Exclude patterns file '$RSYNC_EXCLUDES_FILE' does not exist!"
     err_msg "$MSG"
     exit 1
 fi
 
 RSYNC_BASEDIR=$(conf_var RSYNC_BASEDIR ${CONF_CHOSEN})
-if [ -z ${RSYNC_BASEDIR} ]; then
+if [ -z "${RSYNC_BASEDIR}" ]; then
     MSG="Rsync base backup directory '${RSYNC_BASEDIR}' missing in configuration file!"
     err_msg "$MSG"
     exit 1
 fi
 
 RSYNC_DEST=$(conf_var RSYNC_DEST ${CONF_CHOSEN})
-if [ -z ${RSYNC_DEST} ]; then
+if [ -z "${RSYNC_DEST}" ]; then
     MSG="Rsync destination '${RSYNC_DEST}' missing in configuration file!"
     err_msg "$MSG"
     exit 1
@@ -118,7 +118,7 @@ fi
 
 echo "Starting backup at: $(date)" >> $LOG_FILE
 
-rsync $DRY_RUN --progress --out-format "# %n" --info=progress2 --archive --hard-links --human-readable --inplace --numeric-ids --delete --delete-excluded --exclude-from=$RSYNC_EXCLUDES_FILE $LINK_DEST $PASSWORD_FILE_OPT $RSYNC_BASEDIR ${RSYNC_DEST}/$THIS_BACKUP_DATE 2>> $LOG_FILE |
+rsync $DRY_RUN --progress --out-format "# %n" --info=progress2 --archive --hard-links --human-readable --inplace --numeric-ids --delete --delete-excluded --exclude-from="$RSYNC_EXCLUDES_FILE" $LINK_DEST $PASSWORD_FILE_OPT "${RSYNC_BASEDIR}" "${RSYNC_DEST}/$THIS_BACKUP_DATE" 2>> $LOG_FILE |
 if $ZENITY; then sed 's/^[^#].* \([0-9]\{1,2\}\)%.*/\1/' | (
     #trap "kill `ps --ppid $$ | grep rsync | awk '{print $1}'`" HUP
     trap "pkill -P $$" HUP
